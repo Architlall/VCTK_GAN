@@ -7,30 +7,35 @@ CORS(app)  # This will enable CORS for all routes
 
 @app.route('/convert', methods=['POST'])
 def convert():
-    print('helloo')
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'})
-    file = request.files['file']
-    audio_filename = file.filename
-    filename_without_extension = os.path.splitext(audio_filename)[0]
-    #command = f"python3 -W ignore::UserWarning -m mask_cyclegan_vc.test --name mask_cyclegan_vc_{filename_without_extension} --save_dir results/New/ --preprocessed_data_dir VCTK_preprocessed/vctk_testing/ --gpu_ids 0 --speaker_A_id {filename_without_extension} --speaker_B_id p229F2 --ckpt_dir results/New/mask_cyclegan_vc_{filename_without_extension}/ckpts/ --load_epoch 300 --model_name generator_A2B"
+    if 'sourceFile' not in request.files or 'targetFile' not in request.files:
+        return jsonify({'error': 'Both source and target files are required'})
 
-    print(file.filename)
-    if file.filename == '':
+    source_file = request.files['sourceFile']
+    target_file = request.files['targetFile']
+
+    if source_file.filename == '' or target_file.filename == '':
         return jsonify({'error': 'No selected file'})
 
     try:
-        file_path = os.path.join('result' , file.filename)
-        file.save(file_path)
+        source_file_path = os.path.join('results', source_file.filename)
+        target_file_path = os.path.join('results', target_file.filename)
+        source_file.save(source_file_path)
+        target_file.save(target_file_path)
     except Exception as e:
         return jsonify({'error': str(e)})
 
     try:
-        os.system("python3  -W ignore::UserWarning -m mask_cyclegan_vc.test --name mask_cyclegan_vc_p306F1_p229F2 --save_dir results/New/ --preprocessed_data_dir VCTK_preprocessed/vctk_testing/ --gpu_ids 0 --speaker_A_id p306F1 --speaker_B_id p229F2 --ckpt_dir results/New/mask_cyclegan_vc_p306F1_p229F2/ckpts/ --load_epoch 300 --model_name generator_A2B")
+        # Your conversion logic here
+        # You can use source_file_path and target_file_path for processing
+        # Example command:
+        # os.system(f"python3 your_script.py --source_file {source_file_path} --target_file {target_file_path}")
+        # Replace "your_script.py" with your actual script name and provide appropriate arguments
+        print(f"Source file saved at: {source_file_path}")
+        print(f"Target file saved at: {target_file_path}")
     except Exception as e:
         return jsonify({'error': str(e)})
 
-    return jsonify({'message': 'File saved successfully!'})
+    return jsonify({'message': 'Files saved successfully!'})
 
 if __name__ == '__main__':
     app.run(debug=True)

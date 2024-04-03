@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-image: url('../public/Vincent-van-Gogh-life-work.webp');
+  background-image: url('./Vincent-van-Gogh-life-work.webp');
   background-size: cover; /* This will make sure the image covers the entire .app div */
   background-repeat: no-repeat;
   background-position: center;
@@ -14,7 +14,7 @@
 }
 
 .box {
-  background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3)),url('../public/Vincent-van-Gogh-life-work.webp');
+  background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.3)),url('./Vincent-van-Gogh-life-work.webp');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

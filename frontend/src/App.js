@@ -1,46 +1,41 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './App.css'
+import './App.css';
+
 function App() {
     const [selectedModel, setSelectedModel] = useState('');
-    const [uploadedFiles, setUploadedFiles] = useState([]);
-    const [targetVoiceFile, setTargetVoiceFile] = useState(null);
+    const [sourceFile, setSourceFile] = useState(null);
+    const [targetFile, setTargetFile] = useState(null);
 
-const [file, setFile] = useState(null);
+    const handleSourceFileChange = (event) => {
+        setSourceFile(event.target.files[0]);
+    };
 
-const handleFileChange = (event) => {
-  setFile(event.target.files[0]);
-};
-const handleModelChange = (e) => {
-    setSelectedModel(e.target.value);
-};
+    const handleTargetFileChange = (event) => {
+        setTargetFile(event.target.files[0]);
+    };
 
+    const handleModelChange = (e) => {
+        setSelectedModel(e.target.value);
+    };
 
-const handleSubmit = async () => {
-  try {
-    const formData = new FormData();
-    formData.append('file', file);
+    const handleSubmit = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('sourceFile', sourceFile);
+            formData.append('targetFile', targetFile);
 
-    const response = await axios.post('http://localhost:5000/convert', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
+            const response = await axios.post('http://localhost:5000/convert', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
 
-    console.log(response.data);
-  } catch (error) {
-    console.error('Error uploading file:', error);
-  }
-};
-
-//     const handleDownload = async () => {
-//         if (convertedAudio) {
-//             const downloadLink = document.createElement('a');
-//             downloadLink.href = `http://localhost:5000/uploads/${convertedAudio}`;
-//             downloadLink.download = 'converted_audio.wav';
-//             downloadLink.click();
-//         }
-    
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+    };
 
     return (
         <div className="app">
@@ -56,21 +51,19 @@ const handleSubmit = async () => {
                         </select>
                     </div>
                     <div className="input-group">
-                        <label>Upload Source Voice Files:</label>
-                        <input type="file" accept=".wav" onChange={handleFileChange} />
+                        <label>Upload Source Voice File:</label>
+                        <input type="file" accept=".wav" onChange={handleSourceFileChange} />
                     </div>
-                    {/* <div className="input-group">
+                    <div className="input-group">
                         <label>Upload Target Voice File:</label>
-                        <input type="file" onChange={handleTargetVoiceFileUpload} />
-                    </div> */}
-                    <button onClick={handleSubmit} disabled={!file} >Generate Deepfake</button>
-                    {/* <button onClick={handleDownload} >Download output audio</button> */}
+                        <input type="file" accept=".wav" onChange={handleTargetFileChange} />
+                    </div>
+
+                    <button onClick={handleSubmit} disabled={!sourceFile || !targetFile}>Generate Deepfake</button>
                 </div>
             </div>
         </div>
     );
+}
 
-                };
 export default App;
-
-
